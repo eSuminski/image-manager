@@ -1,0 +1,28 @@
+FROM ubuntu:26.04
+RUN apt update && apt upgrade -y && apt install -y \
+    git \
+    curl \
+    wget \
+    vim \
+    sudo \
+    locales \
+    libatomic1 \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV SHELL=/bin/bash
+RUN useradd -m -s /bin/bash devuser
+USER devuser
+WORKDIR /home/devuser
+RUN curl -o install_nvm.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh && \
+    bash install_nvm.sh && \
+    rm install_nvm.sh && \
+    export NVM_DIR="$HOME/.nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install node && \
+    nvm alias default node && \
+    nvm install 24.14.0
+WORKDIR /home/devuser/project
+CMD [ "sleep", "infinity" ]
