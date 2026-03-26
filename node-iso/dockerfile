@@ -21,8 +21,8 @@ RUN curl -o install_nvm.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/
     rm install_nvm.sh && \
     export NVM_DIR="$HOME/.nvm" && \
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    nvm install node && \
-    nvm alias default node && \
-    nvm install 24.14.0
+    nvm install 24.14.0 && \
+    nvm alias default 24.14.0
+RUN curl -fsSL https://opencode.ai/install | bash
 WORKDIR /home/devuser/project
 CMD [ "sleep", "infinity" ]

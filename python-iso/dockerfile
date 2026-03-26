@@ -17,5 +17,6 @@ ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV SHELL=/bin/bash
 RUN useradd -m -s /bin/bash devuser
+RUN curl -fsSL https://opencode.ai/install | bash
 USER devuser
 CMD [ "sleep", "infinity" ]
