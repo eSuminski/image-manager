@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "vllm-qwen": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Home Server",
+      "options": {
+        "baseURL": "{env:HOME_SERVER_URL}"
+      },
+      "models": {
+        "google/gemma-4-26B-A4B-it": {
+          "name": "Gemma at Home"
+        }
+      }
+    }
+  }
+}
