@@ -1,5 +1,5 @@
 # File: Dockerfile.python
-FROM ghcr.io/esuminski/node-iso
+FROM ghcr.io/esuminski/base-iso
 USER root
 RUN apt update && apt install -y \
     python3 \
