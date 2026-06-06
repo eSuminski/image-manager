@@ -1,0 +1,12 @@
+FROM ghcr.io/esuminski/base-iso
+SHELL ["/bin/bash", "-c"]
+RUN curl -s "https://get.sdkman.io" | bash && \
+    export SDKMAN_DIR="$HOME/.sdkman" && \
+    source "$SDKMAN_DIR/bin/sdkman-init.sh" && \
+    sdk install java 21.0.2-tem && \
+    sdk install maven && \
+    sdk install gradle
+RUN echo 'export SDKMAN_DIR="$HOME/.sdkman"' >> ~/.bashrc && \
+    echo '[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"' >> ~/.bashrc
+WORKDIR /home/devuser/project
+CMD [ "sleep", "infinity" ]

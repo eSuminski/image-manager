@@ -1,0 +1,32 @@
+FROM ubuntu:26.04
+RUN apt update && apt upgrade -y && apt install -y \
+    git \
+    curl \
+    wget \
+    sudo \
+    locales \
+    libatomic1 \
+    unzip \
+    zip \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+RUN if id -u ubuntu >/dev/null 2>&1; then userdel -r ubuntu; fi
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV SHELL=/bin/bash
+RUN useradd -m -s /bin/bash devuser
+USER devuser
+WORKDIR /home/devuser
+RUN curl -o install_nvm.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh && \
+    bash install_nvm.sh && \
+    rm install_nvm.sh && \
+    export NVM_DIR="$HOME/.nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install 24.14.0 && \
+    nvm alias default 24.14.0 && \
+    npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+WORKDIR /home/devuser/project
+COPY --chown=devuser:devuser models.json /home/devuser/.pi/agent/models.json
+ENV NVM_DIR=/home/devuser/.nvm
+ENV PATH=$NVM_DIR/versions/node/v24.14.0/bin:$PATH

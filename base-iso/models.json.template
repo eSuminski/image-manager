@@ -1,0 +1,12 @@
+{
+  "providers": {
+    "{{PROVIDER_NAME}}": {
+      "baseUrl": "{{BASE_URL}}",
+      "api": "{{API_TYPE}}",
+      "apiKey": "{{API_KEY}}",
+      "models": [
+        { "id": "{{MODEL_ID}}" }
+      ]
+    }
+  }
+}
