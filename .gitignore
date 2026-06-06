@@ -31,7 +31,7 @@
 *.env
 **/models.json
 
-# DO NOT ignore the .template file 
-# (They are your source of truth and MUST be committed)
+# DO NOT ignore the following
 !**/models.json.template
 !**/models.json.template/
+!build.env
