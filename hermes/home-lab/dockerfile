@@ -43,6 +43,9 @@ RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- \
     --non-interactive \
     --skip-setup
 
+# Creating backup for first time mounting
+RUN mkdir -p /tmp/hermes_template && cp -r /root/.hermes/. /tmp/hermes_template/
+
 # Ensure the command is on the PATH
 ENV PATH="/usr/local/bin:/root/.local/bin:${PATH}"
 
@@ -60,9 +63,14 @@ WORKDIR /workspace
 ENV USER_ID=0
 ENV GROUP_ID=0
 
+# Add the entrypoint script. This will trigger first time setup when the container is first
+# created, and after that it will start the dashboard
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # The ENTRYPOINT defines the executable that will always run.
 # This turns the container into a specialized "Hermes Dashboard" container.
-ENTRYPOINT ["hermes"]
+ENTRYPOINT ["/entrypoint.sh"]
 
 # The CMD provides the default arguments passed to the ENTRYPOINT.
 # We include the flags explicitly to ensure the dashboard binds 
