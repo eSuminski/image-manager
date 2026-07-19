@@ -1,0 +1,70 @@
+FROM ubuntu:26.04
+# =================================================================
+# SYSTEM SETUP (as ROOT)
+# =================================================================
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1. Install base dependencies + critical tools mentioned in the docs
+RUN apt update && apt upgrade -y && apt install -y \
+    git \
+    curl \
+    wget \
+    sudo \
+    locales \
+    libatomic1 \
+    unzip \
+    zip \
+    xz-utils \
+    build-essential \
+    python3 \
+    python3-pip \
+    python3-venv \
+    libffi-dev \
+    ripgrep \
+    ffmpeg \
+    openssh-client \
+    libasound2-plugins \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up environment variables
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV SHELL=/bin/bash
+ENV HOME=/root
+
+# =================================================================
+# INSTALL HERMES AGENT
+# =================================================================
+
+# We use the flags to ensure a silent, non-interactive, minimal install.
+RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- \
+    --non-interactive \
+    --skip-setup
+
+# Ensure the command is on the PATH
+ENV PATH="/usr/local/bin:/root/.local/bin:${PATH}"
+
+# =================================================================
+# WORKSPACE & PERMISSIONS SETUP
+# =================================================================
+
+# Create the project directory
+RUN mkdir /workspace
+WORKDIR /workspace
+
+# Documentation Tip: To avoid "Permission Denied" when mounting WSL folders, 
+# we allow the container to accept UID/GID overrides via ENV.
+# This mimics the official image's ability to handle host-owned volumes.
+ENV USER_ID=0
+ENV GROUP_ID=0
+
+# The ENTRYPOINT defines the executable that will always run.
+# This turns the container into a specialized "Hermes Dashboard" container.
+ENTRYPOINT ["hermes"]
+
+# The CMD provides the default arguments passed to the ENTRYPOINT.
+# We include the flags explicitly to ensure the dashboard binds 
+# correctly to 0.0.0.0 for host access.
+CMD ["dashboard", "--host", "0.0.0.0", "--port", "9119", "--no-open"]
