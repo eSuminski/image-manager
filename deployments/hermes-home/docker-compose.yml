@@ -1,0 +1,14 @@
+services:
+  hermes-dashboard:
+    image: ghcr.io/esuminski/hermes-home
+    container_name: hermes-dashboard
+    ports:
+      - "9119:9119"
+    volumes:
+      # Volume 1: The Identity/Config (where the .setup_finished marker lives)
+      - ${HERMES_CONFIG_DIR}:/root/.hermes
+      # Volume 2: The Workspace (where your actual files/projects live)
+      - ${HERMES_WORKSPACE_DIR}:/workspace
+    environment:
+      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${DASHBOARD_USER}
+      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=${DASHBOARD_PASS}
